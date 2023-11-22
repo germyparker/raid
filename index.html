@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <style>
+    body {
+      background: #333;
+      color: #ccc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: monospace;
+    }
+  </style>
+  <head>
+    <meta charset="UTF-8" />
+    <title>IS IT A RAID DAY????</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Do we raid today ?</h1>
+      <h2 id="result"></h2>
+    </div>
+    <script>
+      const resultEl = document.getElementById("result");
+
+      const today = new Date();
+      const day = today.getDay();
+
+      if (day === 2 || day === 3) {
+        resultEl.textContent = "YES.  It's RAID DAY!!!!";
+      } else {
+        resultEl.textContent = "No, it's not a raid day.";
+      }
+    </script>
+  </body>
+</html>
