@@ -9,92 +9,74 @@
       align-items: center;
       font-family: monospace;
     }
-    body.its-the-day {
-background-image: linear-gradient(45deg, #f205ae 8.33%, #ffffff00 8.33%, #ffffff00 16.67%, #f205ae 16.67%, #f205ae 25%, #ff000000 25%, #ff000000 50%, #f205ae 50%, #f205ae 58.33%, #ffffff00 58.33%, #ffffff00 66.67%, #f205ae 66.67%, #f205ae 75%, #ff000000 75%, #ff000000 100%);
-    }
-
-    .bg1,  .bg2 {
-
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-    }
-    .container {
-    z-index: 999;}
-    .bg2 {
-
-background-image: linear-gradient(45deg, #f205ae 8.33%, #ffffff00 8.33%, #ffffff00 16.67%, #f205ae 16.67%, #f205ae 25%, #ff000000 25%, #ff000000 50%, #f205ae 50%, #f205ae 58.33%, #ffffff00 58.33%, #ffffff00 66.67%, #f205ae 66.67%, #f205ae 75%, #ff000000 75%, #ff000000 100%);
-background-size: 169.71px 169.71px;
-    }
-    .bg1 {
-
-background-image: linear-gradient(45deg, #ff0000aa 25%, #333333 25%, #333333 50%, #ff0000aa 50%, #ff0000aa 75%, #333333 75%, #333333 100%);
-background-size: 56.57px 56.57px;
-    }
-@keyframes fadeInOut {
-  0% {
-    opacity: 0.9999;
-  }
-  50% {
-        opacity: 0.001;
-  }
-  100% {
-        opacity: 0.99999;
-  }
-}
-    h1, h2, h3 {
-font-size: clamp(1rem, -0.875rem + 8.333333vw, 3.5rem);
+    h1,
+    h2,
+    h3 {
+      text-align: center;
+      font-size: clamp(1rem, -0.875rem + 8.333333vw, 3.5rem);
     }
   </style>
   <head>
-    <meta charset="UTF-8" />
-    <title>IS IT A RAID DAY????</title>
+    <meta charset="utf-8" />
+    <title>is it a raid day????</title>
   </head>
   <body>
-        <!-- <div class="bg1"></div> -->
-        <!-- <div class="bg2"></div> -->
-    <div class="container"V
-      <h1>Do we raid today ?</h1>
+    <!-- <div class="bg1"></div> -->
+    <!-- <div class="bg2"></div> -->
+    <div class="container">
+      <h1>do we raid today ?</h1>
       <h2 id="message"></h2>
 
       <h3 id="timer"></h3>
     </div>
     <script>
- const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const dayOfWeek = new Date().getDay();
-    const isRaidDay = (dayOfWeek === 2 || dayOfWeek === 3);
+      const daysofweek = [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+      ];
+      const dayofweek = new date().getday();
+      const israidday = dayofweek === 2 || dayofweek === 3;
 
-    if (isRaidDay) {
-      document.getElementById("message").textContent = "YES.  It's raid day!!";
-    } else {
-      document.getElementById("message").textContent = "No, it's not a raid day :(";
-    }
-
-    if (isRaidDay) {
-      const endTime = new Date();
-      if (dayOfWeek === 2) {
-        endTime.setHours(21);
-        endTime.setMinutes(30);
-      } else if (dayOfWeek === 3) {
-        endTime.setHours(22);
-        endTime.setMinutes(0);
+      if (israidday) {
+        document.getelementbyid("message").textcontent =
+          "yes.  it's raid day!!";
+      } else {
+        document.getelementbyid("message").textcontent =
+          "no, it's not a raid day :(";
       }
 
-      setInterval(function() {
-        const currentTime = new Date();
-        const timeRemaining = endTime - currentTime;
-        if (timeRemaining <= 0) {
-          document.getElementById("timer").textContent = "It's raid day! But the raid is over.";
-        } else {
-          const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
-          const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-          document.getElementById("timer").textContent = hours + "h " + minutes + "m " + seconds + "s until we start!!!";
+      if (israidday) {
+        const endtime = new date();
+        if (dayofweek === 2) {
+          endtime.sethours(21);
+          endtime.setminutes(30);
+        } else if (dayofweek === 3) {
+          endtime.sethours(22);
+          endtime.setminutes(0);
         }
-      }, 1000);
-    }
+
+        setinterval(function () {
+          const currenttime = new date();
+          const timeremaining = endtime - currenttime;
+          if (timeremaining <= 0) {
+            document.getelementbyid("timer").textcontent =
+              "it's raid day! but the raid is over.";
+          } else {
+            const hours = math.floor(timeremaining / (1000 * 60 * 60));
+            const minutes = math.floor(
+              (timeremaining % (1000 * 60 * 60)) / (1000 * 60),
+            );
+            const seconds = math.floor((timeremaining % (1000 * 60)) / 1000);
+            document.getelementbyid("timer").textcontent =
+              hours + "h " + minutes + "m " + seconds + "s until we start!!!";
+          }
+        }, 1000);
+      }
     </script>
   </body>
 </html>
