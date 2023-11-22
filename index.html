@@ -9,6 +9,7 @@
       align-items: center;
       font-family: monospace;
     }
+
     h1 {
       
       font-size: clamp(1rem, -0.875rem + 7.333333vw, 2.5rem);
@@ -20,62 +21,62 @@
     }
   </style>
   <head>
-    <meta charset="utf-8" />
-    <title>is it a raid day????</title>
+    <meta charset="UTF-8" />
+    <title>IS IT A RAID DAY????</title>
   </head>
   <body>
     <!-- <div class="bg1"></div> -->
     <!-- <div class="bg2"></div> -->
     <div class="container">
-      <h1>do we raid today ?</h1>
+      <h1>Do we raid today ?</h1>
       <h2 id="message"></h2>
 
       <h3 id="timer"></h3>
     </div>
     <script>
-      const daysofweek = [
-        "sunday",
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday",
+      const daysOfWeek = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
       ];
-      const dayofweek = new date().getday();
-      const israidday = dayofweek === 2 || dayofweek === 3;
+      const dayOfWeek = new Date().getDay();
+      const isRaidDay = dayOfWeek === 2 || dayOfWeek === 3;
 
-      if (israidday) {
-        document.getelementbyid("message").textcontent =
-          "yes.  it's raid day!!";
+      if (isRaidDay) {
+        document.getElementById("message").textContent =
+          "YES.  It's raid day!!";
       } else {
-        document.getelementbyid("message").textcontent =
-          "no, it's not a raid day :(";
+        document.getElementById("message").textContent =
+          "No, it's not a raid day :(";
       }
 
-      if (israidday) {
-        const endtime = new date();
-        if (dayofweek === 2) {
-          endtime.sethours(21);
-          endtime.setminutes(30);
-        } else if (dayofweek === 3) {
-          endtime.sethours(22);
-          endtime.setminutes(0);
+      if (isRaidDay) {
+        const endTime = new Date();
+        if (dayOfWeek === 2) {
+          endTime.setHours(21);
+          endTime.setMinutes(30);
+        } else if (dayOfWeek === 3) {
+          endTime.setHours(22);
+          endTime.setMinutes(0);
         }
 
-        setinterval(function () {
-          const currenttime = new date();
-          const timeremaining = endtime - currenttime;
-          if (timeremaining <= 0) {
-            document.getelementbyid("timer").textcontent =
-              "it's raid day! but the raid is over.";
+        setInterval(function () {
+          const currentTime = new Date();
+          const timeRemaining = endTime - currentTime;
+          if (timeRemaining <= 0) {
+            document.getElementById("timer").textContent =
+              "It's raid day! But the raid is over.";
           } else {
-            const hours = math.floor(timeremaining / (1000 * 60 * 60));
-            const minutes = math.floor(
-              (timeremaining % (1000 * 60 * 60)) / (1000 * 60),
+            const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+            const minutes = Math.floor(
+              (timeRemaining % (1000 * 60 * 60)) / (1000 * 60),
             );
-            const seconds = math.floor((timeremaining % (1000 * 60)) / 1000);
-            document.getelementbyid("timer").textcontent =
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            document.getElementById("timer").textContent =
               hours + "h " + minutes + "m " + seconds + "s until we start!!!";
           }
         }, 1000);
