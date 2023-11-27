@@ -25,94 +25,53 @@
     </style>
   </head>
   <body>
+    <div id="countdown"></div>
     <script>
-      // Function to check if it's raid time in the user's timezone
-      function isRaidDay() {
+      function calculateNextEventTime() {
         const now = new Date();
-        const day = now.getUTCDay();
-        const hours = now.getUTCHours();
-        const minutes = now.getUTCMinutes();
-        const raidTimeWednesday = 3 * 60 + 30; // 3:30am in minutes
-        const raidTimeThursday = 4 * 60; // 4:00am in minutes
+        const dayOfWeek = now.getDay();
+        const nextTuesday = dayOfWeek <= 2 ? 2 - dayOfWeek : 9 - dayOfWeek;
+        const nextEventTime = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate() + nextTuesday,
+          21,
+          30,
+          0,
+        );
 
-        // Calculate time until the next raid time
-        const timeUntilRaidWednesday =
-          (raidTimeWednesday - (hours * 60 + minutes) + 1440) % 1440; // Adding 1440 to handle negative values
-        const timeUntilRaidThursday =
-          (raidTimeThursday - (hours * 60 + minutes) + 1440) % 1440;
-
-        // Check if the current time is within 30 minutes of the raid time
-        if (
-          (day === 3 && timeUntilRaidWednesday <= 30) ||
-          (day === 4 && timeUntilRaidThursday <= 30)
-        ) {
-          return true;
+        // If the next event time is earlier than the current time, move to the next Tuesday
+        if (nextEventTime <= now) {
+          nextEventTime.setDate(nextEventTime.getDate() + 7);
         }
 
-        return false;
+        return nextEventTime;
       }
 
-      // Function to update the display based on raid day
-      function updateDisplay() {
-        const raidDay = isRaidDay();
-
-        if (raidDay) {
-          document.body.innerHTML =
-            "<p class='sm'> is it a raid day???</p><p id='status'>YES. It's raid day!!</p><p id='timer'></p>";
-
-          // Calculate time until raid time
-          const now = new Date();
-          const raidTime = new Date(now);
-          raidTime.setUTCHours(now.getUTCDay() === 3 ? 3 : 4, 30, 0, 0);
-          let timeUntilRaid = raidTime - now;
-
-          // Display countdown timer
-          const timerElement = document.getElementById("timer");
-          const countdownTimer = setInterval(function () {
-            const minutes = Math.floor(timeUntilRaid / 60000);
-            const seconds = Math.floor((timeUntilRaid % 60000) / 1000);
-
-            if (timeUntilRaid <= 0) {
-              clearInterval(countdownTimer);
-              startRaidCountup();
-            } else {
-              timerElement.textContent = `Countdown: ${minutes}m ${seconds}s`;
-              timeUntilRaid -= 1000;
-            }
-          }, 1000);
-        } else {
-          document.body.innerHTML =
-            "<p class='sm'> is it a raid day???</p><p id='status'>No, it's not a raid day :(</p>";
-        }
-      }
-
-      // Function to start the count up after raid time has started
-      function startRaidCountup() {
-        const timerElement = document.getElementById("timer");
-        timerElement.textContent = "It's raid time!!!";
-
-        // Calculate time until raid day ends
+      function updateCountdown() {
+        const countdownElement = document.getElementById("countdown");
         const now = new Date();
-        const raidEndTime = new Date(now);
-        raidEndTime.setUTCHours(now.getUTCDay() === 3 ? 5 : 4, 30, 0, 0); // Raid day ends after 90 or 60 minutes
+        const nextEventTime = calculateNextEventTime();
+        const timeDifference = nextEventTime - now;
 
-        const countupTimer = setInterval(function () {
-          const minutes = Math.floor((now - raidEndTime) / 60000);
-          const seconds = Math.floor(((now - raidEndTime) % 60000) / 1000);
+        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+        );
+        const minutes = Math.floor(
+          (timeDifference % (1000 * 60 * 60)) / (1000 * 60),
+        );
+        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
-          if (now - raidEndTime >= 0) {
-            clearInterval(countupTimer);
-            document.body.innerHTML =
-              "<p id='status'>it IS a raid day, but raid is over :(</p>";
-          } else {
-            timerElement.textContent = `Countup: ${minutes}m ${seconds}s`;
-            now.setSeconds(now.getSeconds() + 1);
-          }
-        }, 1000);
+        countdownElement.innerHTML = `Raid is coming!!! ${days}d ${hours}h ${minutes}m ${seconds}s`;
       }
 
-      // Call the initial update
-      updateDisplay();
+      function startCountdown() {
+        updateCountdown(); // Initial update
+        setInterval(updateCountdown, 1000); // Update every second
+      }
+
+      document.addEventListener("DOMContentLoaded", startCountdown);
     </script>
   </body>
 </html>

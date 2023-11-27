@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Raid Timer</title>
+    <style>
+      body {
+        background-color: #333;
+        color: #ccc;
+        font-size: clamp(1rem, -0.875rem + 8.333333vw, 3.5rem);
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: monospace;
+      }
+      .sm {
+        font-size: clamp(1rem, -0.875rem + 7.333333vw, 2.5rem);
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      // init variables
+      const raidTimeWednesday = 3 * 60 + 30; // 3:30am in minutes
+         const raidTimeThursday = 4 * 60; // 4:00am in minutes
+
+      const now = new Date();
+         const day = now.getUTCDay();
+      const localDay = now.getDay();
+         const hours = now.getUTCHours();
+         const minutes = now.getUTCMinutes();
+
+      const offset = now.getTimezoneOffset();
+      // convert raid time to local time
+      const localRTWeds = raidTimeWednesday + offset * 60000;
+      const localRTThurs = raidTimeThursday + offset * 60000;
+
+      // INT; check if it is raid day
+      /* OUTPUTS:
+      	1: it is raid1 today
+      	2: it is raid2 today
+      	0: not raid day
+      */
+      function isRaidDay() {
+      	// if local raid time is on previous day local time
+      	if(localRTWeds < 0 || localRTThurs < 0) {
+      		// then check if it is tuesday or wednesday UTC
+      		if(localDay == 2)  {
+      			return 1;
+      		} else if (localDay == 3) {
+      			return 2;
+      		} else {
+      			return 0;
+      		}
+
+      		// if local raid time is on same day as UTC
+      	} else if(localRTWeds > 0 || localRTThurs > 0) {
+      		// check if it's wednesday or thursday
+      		if(localDay == 3) {
+      			return 1;
+      		} else if(localDay == 4) {
+      			return 2;
+      		} else {
+      			return 0;
+      		}
+      	}
+      }
+
+      // check local time versus raid time UTC
+      /* OUTPUTS:
+      	1: it is at most 3 hours before raid time on UTC Weds
+      	2: it is at most 4 hours before raid time on UTC thurs
+      	0: raid has ended
+      	null: it is not a raid day
+      */
+      function isRaidTime() {
+      	const timeInMins = (hours * 60 + minutes);
+
+      	if(day == 3) { // raid on UTC wednesday
+      		// if it is before 3:30am UTC
+      		if(timeInMins < raidTimeWednesday)) {
+      			return 1;
+      		} else {
+      			return 0;
+      		}
+      	} else if(day == 4) { // raid on UTC thursday
+      		if(timeInMins < raidTimeThursday)) {
+      			return 2;
+      		} else {
+      			return 0;
+      		}
+      	} else { // it is not a raid day
+      		return null;
+      	}
+      }
+
+
+      function updateDisplay() {
+      	// init variablles
+      	const isItToday = isRaidDay();
+      	const isItRaidTime = isRaidTime();
+      	// always display
+      	document.body.innerHTML = <p class='sm'>is it a raid day???</p><p id=answer> </p><p id='Timer'> </p>;
+
+      	// conditional displays
+      	switch(isItToday) {
+      		case 1: // wednesday UTC
+      			if(isItRaidTime == 1) {
+      				document.getElementById('answer').innerText =  'It is a raid day, and we\'re raiding soon!';
+
+      			} else if(isItRaidTime == 0) {
+      				document.getElementById('answer').innerText = 'It is a raid day, but the raid has ended.';
+      			}
+      		break;
+
+      		case 2: // thursday UTC
+      			if(isItRaidTime == 2) {
+      				document.getElementById('answer').innerText =  'It is a raid day, and we\'re raiding soon!';
+      			} else if(isItRaidTime == 0) {
+      				document.getElementById('answer').innerText = 'It is a raid day, but the raid has ended.';
+      			}
+      		break;
+
+      		default:
+      			document.getElementById('answer').innerText = 'It is NOT a raid day.');
+      		break;
+      	}
+
+
+      }
+
+      // run
+      updateDisplay();
+    </script>
+  </body>
+</html>
