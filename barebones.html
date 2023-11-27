@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Raid Timer</title>
+    <style>
+      body {
+        background-color: #333;
+        color: #ccc;
+        font-size: clamp(1rem, -0.875rem + 8.333333vw, 3.5rem);
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: monospace;
+      }
+      .sm {
+        font-size: clamp(1rem, -0.875rem + 7.333333vw, 2.5rem);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="countdown"></div>
+    <script>
+      function calculateNextEventTime() {
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        const nextTuesday = dayOfWeek <= 2 ? 2 - dayOfWeek : 9 - dayOfWeek;
+        const nextEventTime = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate() + nextTuesday,
+          21,
+          30,
+          0,
+        );
+
+        // If the next event time is earlier than the current time, move to the next Tuesday
+        if (nextEventTime <= now) {
+          nextEventTime.setDate(nextEventTime.getDate() + 7);
+        }
+
+        return nextEventTime;
+      }
+
+      function updateCountdown() {
+        const countdownElement = document.getElementById("countdown");
+        const now = new Date();
+        const nextEventTime = calculateNextEventTime();
+        const timeDifference = nextEventTime - now;
+
+        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+        );
+        const minutes = Math.floor(
+          (timeDifference % (1000 * 60 * 60)) / (1000 * 60),
+        );
+        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+        countdownElement.innerHTML = `Raid is coming!!! ${days}d ${hours}h ${minutes}m ${seconds}s`;
+      }
+
+      function startCountdown() {
+        updateCountdown(); // Initial update
+        setInterval(updateCountdown, 1000); // Update every second
+      }
+
+      document.addEventListener("DOMContentLoaded", startCountdown);
+    </script>
+  </body>
+</html>

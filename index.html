@@ -25,53 +25,123 @@
     </style>
   </head>
   <body>
-    <div id="countdown"></div>
     <script>
-      function calculateNextEventTime() {
-        const now = new Date();
-        const dayOfWeek = now.getDay();
-        const nextTuesday = dayOfWeek <= 2 ? 2 - dayOfWeek : 9 - dayOfWeek;
-        const nextEventTime = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate() + nextTuesday,
-          21,
-          30,
-          0,
-        );
+      // init variables
+      const raidTimeWednesday = 3 * 60 + 30; // 3:30am in minutes
+      const raidTimeThursday = 4 * 60; // 4:00am in minutes
 
-        // If the next event time is earlier than the current time, move to the next Tuesday
-        if (nextEventTime <= now) {
-          nextEventTime.setDate(nextEventTime.getDate() + 7);
+      const now = new Date();
+      const day = now.getUTCDay();
+      const localDay = now.getDay();
+      const hours = now.getUTCHours();
+      const minutes = now.getUTCMinutes();
+
+      const offset = now.getTimezoneOffset();
+      // convert raid time to local time
+      const localRTWeds = raidTimeWednesday + offset * 60000;
+      const localRTThurs = raidTimeThursday + offset * 60000;
+
+      // INT; check if it is raid day
+      /* OUTPUTS:
+      	1: it is raid1 today
+      	2: it is raid2 today
+      	0: not raid day
+      */
+      function isRaidDay() {
+        // if local raid time is on previous day local time
+        if (localRTWeds < 0 || localRTThurs < 0) {
+          // then check if it is tuesday or wednesday UTC
+          if (localDay == 2) {
+            return 1;
+          } else if (localDay == 3) {
+            return 2;
+          } else {
+            return 0;
+          }
+
+          // if local raid time is on same day as UTC
+        } else if (localRTWeds > 0 || localRTThurs > 0) {
+          // check if it's wednesday or thursday
+          if (localDay == 3) {
+            return 1;
+          } else if (localDay == 4) {
+            return 2;
+          } else {
+            return 0;
+          }
         }
-
-        return nextEventTime;
       }
 
-      function updateCountdown() {
-        const countdownElement = document.getElementById("countdown");
-        const now = new Date();
-        const nextEventTime = calculateNextEventTime();
-        const timeDifference = nextEventTime - now;
+      // check local time versus raid time UTC
+      /* OUTPUTS:
+      	1: it is at most 3 hours before raid time on UTC Weds
+      	2: it is at most 4 hours before raid time on UTC thurs
+      	0: raid has ended
+      	null: it is not a raid day
+      */
+      function isRaidTime() {
+        const timeInMins = hours * 60 + minutes;
 
-        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(
-          (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-        );
-        const minutes = Math.floor(
-          (timeDifference % (1000 * 60 * 60)) / (1000 * 60),
-        );
-        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-
-        countdownElement.innerHTML = `Raid is coming!!! ${days}d ${hours}h ${minutes}m ${seconds}s`;
+        if (day == 3) {
+          // raid on UTC wednesday
+          // if it is before 3:30am UTC
+          if (timeInMins < raidTimeWednesday) {
+            return 1;
+          } else {
+            return 0;
+          }
+        } else if (day == 4) {
+          // raid on UTC thursday
+          if (timeInMins < raidTimeThursday) {
+            return 2;
+          } else {
+            return 0;
+          }
+        } else {
+          // it is not a raid day
+          return null;
+        }
       }
 
-      function startCountdown() {
-        updateCountdown(); // Initial update
-        setInterval(updateCountdown, 1000); // Update every second
+      function updateDisplay() {
+        // init variablles
+        const isItToday = isRaidDay();
+        const isItRaidTime = isRaidTime();
+        // always display
+        document.body.innerHTML =
+          "<p class='sm'>is it a raid day???</p><p id='answer'> </p><p id='Timer'> </p>";
+
+        // conditional displays
+        switch (isItToday) {
+          case 1: // wednesday UTC
+            if (isItRaidTime == 1) {
+              document.getElementById("answer").innerText =
+                "It is a raid day, and we're raiding soon!";
+            } else if (isItRaidTime == 0) {
+              document.getElementById("answer").innerText =
+                "It is a raid day, but the raid has ended.";
+            }
+            break;
+
+          case 2: // thursday UTC
+            if (isItRaidTime == 2) {
+              document.getElementById("answer").innerText =
+                "It is a raid day, and we're raiding soon!";
+            } else if (isItRaidTime == 0) {
+              document.getElementById("answer").innerText =
+                "It is a raid day, but the raid has ended.";
+            }
+            break;
+
+          default:
+            document.getElementById("answer").innerText =
+              "It is NOT a raid day.";
+            break;
+        }
       }
 
-      document.addEventListener("DOMContentLoaded", startCountdown);
+      // run
+      updateDisplay();
     </script>
   </body>
 </html>
